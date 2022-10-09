@@ -15,16 +15,18 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import LoginCheck from "./Components/LoginCheck";
 import Page from "./Components/Page";
+import Edit from "./Components/Edit";
 
 function App() {
   axios.defaults.withCredentials = true;
   const [loggedin, setLoggedin] = useState(false);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState([]);
+  console.log(user);
   const getUser = async () => {
     axios.get("http://localhost:3001/login").then((data) => {
       if (data.data.logged) {
         setLoggedin(true);
-        setUser(data.data.user[0]);
+        setUser(data.data.user);
       } else {
         setLoggedin(false);
       }
@@ -58,7 +60,7 @@ function App() {
               <a href="/create-post">Create post</a>
             </div>
             <div className="mr-9">
-              <a href="/profile">Profile</a>
+              <a href={"/profile/" + user[0].id}>Profile</a>
             </div>
           </>
         )}
@@ -70,9 +72,10 @@ function App() {
           <Route path="/page" element={<Page />} />
 
           <Route path="/login" element={<Login />} />
+          <Route path="/Edit" element={<Edit />} />
 
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/profile/:id" element={<Profile user={user} />} />
         </Routes>
       </Router>
     </div>

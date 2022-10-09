@@ -12,7 +12,7 @@ app.use("/images", express.static("./images"));
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -35,7 +35,7 @@ const db = mysql.createConnection({
   password: "",
   host: "localhost",
   user: "root",
-  database: "blog_react",
+  database: "react_blog",
 });
 //////////////////************ multer setup **************////////////
 const storage = multer.diskStorage({
@@ -69,9 +69,22 @@ app.post("/createpost", upload.single("file"), (req, res) => {
     });
   }
 });
+///////////////*********** delete post *********///////////////////////////
+app.delete("/deletepost/:id", (req, res) => {
+  const id = req.params.id;
+  const deleteState = "DELETE FROM post WHERE id = ? ";
+  db.query(deleteState, [id], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 //////////////////************* show post *****************/
-app.get("/posts", (req, res) => {
-  db.query("SELECT * FROM post", (err, result) => {
+app.post("/posts", (req, res) => {
+  const id = req.body.id;
+  db.query("SELECT * FROM post WHERE postedBy = ?", [id], (err, result) => {
     if (err) {
       console.log(err);
     } else {
@@ -88,6 +101,18 @@ app.get("/userposts", (req, res) => {
       console.log(err);
     } else {
       console.log(result);
+      res.send(result);
+    }
+  });
+});
+//////////////////************* all users *****************/
+app.post("/allusers", (req, res) => {
+  const usersState = "SELECT * FROM users WHERE id = ? ";
+  const id = req.body.id;
+  db.query(usersState, [id], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
       res.send(result);
     }
   });
