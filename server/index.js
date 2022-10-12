@@ -82,8 +82,8 @@ app.delete("/deletepost/:id", (req, res) => {
   });
 });
 //////////////////************* show post *****************/
-app.post("/posts", (req, res) => {
-  const id = req.body.id;
+app.post("/otherposts", (req, res) => {
+  const id = req.body.firstname;
   db.query("SELECT * FROM post WHERE postedBy = ?", [id], (err, result) => {
     if (err) {
       console.log(err);
@@ -107,8 +107,8 @@ app.get("/userposts", (req, res) => {
 });
 //////////////////************* all users *****************/
 app.post("/allusers", (req, res) => {
-  const usersState = "SELECT * FROM users WHERE id = ? ";
-  const id = req.body.id;
+  const usersState = "SELECT * FROM users WHERE firstname = ? ";
+  const id = req.body.firstname;
   db.query(usersState, [id], (err, result) => {
     if (err) {
       console.log(err);

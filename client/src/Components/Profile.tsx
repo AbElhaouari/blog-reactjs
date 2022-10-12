@@ -11,20 +11,22 @@ function Profile({ user }: any) {
   const [usersList, setUsersList] = useState([]);
   const [url, setUrl] = useState(false);
   const [userID, setUserID] = useState("");
-  const { id } = useParams();
+  const { firstname } = useParams();
 
   axios.defaults.withCredentials = true;
-  console.log(usersList);
+  console.log(otherPosts);
 
   const getOtherUsersPosts = () => {
-    axios.post("http://localhost:3001/posts", { id: id }).then((data) => {
-      setOtherPosts(data.data);
-    });
+    axios
+      .post("http://localhost:3001/otherposts", { firstname: firstname })
+      .then((data) => {
+        setOtherPosts(data.data);
+      });
   };
   const getUserid = () => {
     axios.get("http://localhost:3001/login").then((data) => {
       if (data.data.logged) {
-        setUserID(data.data.user[0].id);
+        setUserID(data.data.user[0].firstname);
       }
     });
   };
@@ -36,9 +38,11 @@ function Profile({ user }: any) {
   };
 
   const getUsers = () => {
-    axios.post("http://localhost:3001/allusers", { id: id }).then((data) => {
-      setUsersList(data.data);
-    });
+    axios
+      .post("http://localhost:3001/allusers", { firstname: firstname })
+      .then((data) => {
+        setUsersList(data.data);
+      });
   };
   useEffect(() => {
     getData();
@@ -59,10 +63,10 @@ function Profile({ user }: any) {
   return (
     <div className="flex flex-wrap border rounded shadow-lg ml-16 mr-16 mt-4 mb-10">
       <div className="flex flex-col">
-        {userID == id ? (
+        {userID === firstname ? (
           <div className="flex flex-row p-9 ml-2">
             {user
-              .filter((u: any) => (u.id = id))
+              .filter((u: any) => u.firstname == firstname)
               .map((val: any) => {
                 return (
                   <>
@@ -90,7 +94,7 @@ function Profile({ user }: any) {
         ) : (
           <div className="flex flex-row p-9 ml-32">
             {usersList
-              .filter((u: any) => (u.id = id))
+              .filter((u: any) => u.firstname == firstname)
               .map((val: any) => {
                 return (
                   <>
@@ -118,7 +122,7 @@ function Profile({ user }: any) {
             <div className="border-b border-blue-800 text-lg mb-10">Posts</div>
           </div>
         </div>
-        {userID == id ? (
+        {userID === firstname ? (
           <div className="grid grid-cols-1  md:grid-cols-2 xl:grid-cols-3">
             {postData.map((val: any, key) => {
               return (
@@ -165,15 +169,6 @@ function Profile({ user }: any) {
                   key={key}
                 >
                   <div className=" border rounded p-3 mr-10 shadow-lg">
-                    <div>
-                      <button
-                        onClick={() => {
-                          onDelete(val.id);
-                        }}
-                      >
-                        <MdDeleteOutline className="h-7 w-7" />
-                      </button>
-                    </div>
                     <div>
                       <div>
                         {url && (

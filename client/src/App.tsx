@@ -60,7 +60,7 @@ function App() {
               <a href="/create-post">Create post</a>
             </div>
             <div className="mr-9">
-              <a href={"/profile/" + user[0].id}>Profile</a>
+              <a href={"/profile/" + user[0].firstname}>Profile</a>
             </div>
           </>
         )}
@@ -75,7 +75,7 @@ function App() {
           <Route path="/Edit" element={<Edit />} />
 
           <Route path="/register" element={<Register />} />
-          <Route path="/profile/:id" element={<Profile user={user} />} />
+          <Route path="/profile/:firstname" element={<Profile user={user} />} />
         </Routes>
       </Router>
     </div>
